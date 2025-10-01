@@ -6,6 +6,7 @@ Informations created for the avatar :
 # NAME 
 # SURNAME
 # PSEUDO
+# Address
 # BIRTH DATE
 # TEMPORARY EMAIL
 # PHOTOS (one for profil photo)
