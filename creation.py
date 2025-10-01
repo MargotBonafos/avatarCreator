@@ -2,6 +2,11 @@ from random import randint
 import requests
 from pathlib import Path
 
+### 
+# Open a file (dictionnary), get a ramdom number and choose the name of the line of the ramdom number
+# parameters : file_name : the dictionnary in which the name is choosen 
+# return the name choosen
+### 
 def choose_random_string(file_name):
     with open(file_name, "r", encoding="utf8") as f:
         lines = f.readlines()
@@ -9,42 +14,45 @@ def choose_random_string(file_name):
         name = lines[line_choice].strip()
     return name
 
+### 
+# Create a directory with all informations about the new avatar
+# parameters : completeName : the name of the folder
+# return the Path created
+### 
 def create_folder(completeName ):
-    out_dir = Path(f"results/{completeName}")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    return out_dir
+    dir = Path(f"results/{completeName}")
+    dir.mkdir(parents=True, exist_ok=True)
+    return dir
 
-
+### 
+# Insert the ramdom photo of the avatar in the corresponding folder
+# parameters : dir : the path of the folder, img : the photo in bytes
+### 
 def insert_photo_in_folder(dir, img):
+    photo_name = f"{dir.name}_photo.png" 
+    (dir / photo_name).write_bytes(img)
 
-    file_name = f"{dir.name}_photo.png" 
-
-    (dir / file_name).write_bytes(img)
-
-
+### 
+# Get a ramdom avatar from the website https://thispersondoesnotexist.com/
+# return : the image in bytes
+### 
 def thisPersonDoesNotExist_request():
     s = requests.Session()
     s.headers.update({"User-Agent":"YourTool/1.0"})
     r = s.get("https://thispersondoesnotexist.com/")
     r.raise_for_status()
 
-    print("Content-Type:", r.headers.get("Content-Type"))
-
     img = r.content
-    #with open("favicon.ico", "wb") as f:
-    #    f.write(img)
 
     return img
 
 
-nameChoosen = choose_random_string("names_dictionnary.txt")
-print(nameChoosen)
+name = choose_random_string("names_dictionnary.txt")
 
-surnameChoosen = choose_random_string("surnames_dictionnary.txt")
-print(surnameChoosen)
+surname = choose_random_string("surnames_dictionnary.txt")
 
-image_getted = thisPersonDoesNotExist_request()
+img = thisPersonDoesNotExist_request()
 
-new_dir = create_folder(f"{nameChoosen}_{surnameChoosen}")
+dir = create_folder(f"{name}_{surname}")
 
-insert_photo_in_folder(new_dir, image_getted)
+insert_photo_in_folder(dir, img)
